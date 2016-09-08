@@ -1,0 +1,40 @@
+DAHLS Planning Doc
+==================
+
+
+Relationships
+-------------
+
+### Types of Relationships
+
+* Dahl->Noun
+* Noun->Adjective
+
+
+### Dahl->Noun Relationship Structure
+
+Noun Verb Noun(Optional) Conditional(Optional) 
+
+
+### Dahl->Noun Relationship Examples
+
+* Dahlfoo Eats Pizza (When he's sad)
+* Dahlfoo Wants Dahlbar (When he's lonely)
+* Dahlfoo Loves Dahlbar
+* Dahlfoo Wants Money
+* Dahlfoo Attacks Dahlbar (When he's drunk)
+* Dahlfoo Likes == Dahlfoo will like everyone and everything by default
+* Dahlfoo Aspires Money == Dahlfoo wants his future self to have money. 
+
+
+Nouns
+-----
+
+Verbs
+-----
+
+Conditionals
+------------
+
+Conditionals are if-then qualifiers that 
+
