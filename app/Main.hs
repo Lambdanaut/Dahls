@@ -5,56 +5,97 @@ module Main where
 import Control.Lens hiding (element)
 import Data.List (find)
 
-data NounTemplate = DahlTemplate | ObjectTemplate deriving(Show)
-
+type NounTemplateID = Integer
 type NounID = Integer
+type RelID = Integer
+type AdjTemplateID = Integer
+type AdjID = Integer
 
-data Noun = Dahl {
-    _nounID :: NounID,
-    _nounName :: String,
-    _nounRels :: [Rel],
-    _nounClonedFrom :: NounID
-} | Object {
-    _nounID :: Integer,
-    _nounName :: String,
-    _nounClonedFrom :: NounID
-} deriving(Show)
+type Conditional = Noun -> [Adj] -> Bool
+type Verb = Noun -> Noun -> [Action]
 
-data Verb = 
-      Likes
-    | Wants
-    | Lusts
-    | Loves
-    | Eats
+data NounTemplate = NounTemplate {
+    _nounTemplateID         :: NounTemplateID,
+    _nounTemplateName       :: String,
+    _nounTemplateRels       :: [Rel],
+    _nounTemplateAdjs       :: [Adj]
+} deriving (Show)
+
+data Noun = Noun {
+    _nounID    :: NounID,
+    _nounRels  :: [Rel],
+    _nounAdjs  :: [Adj],
+    _nounSuper :: NounTemplateID
+} deriving (Show)
+
+data Action = 
+      Eats Noun Noun
     | Attacks
-    | PicksUp
-    | Owns deriving(Show)
-
-data Conditional = Conditional deriving(Show)
+    | PicksUp deriving (Show)
 
 data Rel = Rel {
-    _relID          :: Integer,
+    _relID          :: RelID,
     _relPower       :: Double, -- Strength of relationship
-    _relNoun1       :: Noun,
     _relVerb        :: Verb,
-    _relNoun2       :: Maybe Noun,
-    _relConditional :: Maybe Conditional
-} deriving(Show)
+    _relConditional :: [Conditional]
+} deriving (Show)
 
+data AdjTemplate = AdjTemplate {
+    _adjTemplateID    :: AdjTemplateID,
+    _adjTemplateName  :: String,
+    _adjTemplateValue :: Integer
+} deriving (Show)
+
+data Adj = Adj {
+    _adjID    :: AdjID,
+    _adjValue :: Integer,
+    _adjAdjs  :: [Adj]
+    _adjSuper :: AdjTemplateID,
+} deriving (Show)
+
+makeLenses ''NounTemplate
 makeLenses ''Noun
 makeLenses ''Rel
+makeLenses ''Adj
+makeLenses ''AdjTemplate
 
-dahlfoo :: Noun
-dahlfoo = Dahl 0 "Dahlfoo" [] DahlTemplate 
+-- Test functions
+verbHungers :: Verb
+verbHungers n1 n2 = [Eats n1 n2]
 
-dahlbar :: Noun
-dahlbar = Dahl 1 "Dahlbar" [] DahlTemplate 
+condHungry :: Conditional
+condHungry lowestSatiety n _ = case satiety of find (n^.nounAdjs) (\adj -> adj^.adjSuper == adjSatietyTemplateId) hungry of
+    Just satiety -> satiety < lowestSatiety
+    Nothing -> False
 
-money :: Noun
-money = Object 2 "money" ObjectTemplate 
+adjTastyTemplateId = 0
+adjTastyTemplate :: AdjTemplate
+adjTastyTemplate = AdjTemplate 0 "tasty" adjTastyTemplateId
 
-dahlfooWantsMoney :: Rel
-dahlfooWantsMoney = Rel 0 100 dahlfoo Wants (Just money) Nothing
+adjTasty :: AdjTemplate
+adjTasty = instantiate adjTastyTemplate
+
+adjSatietyTemplateId = 1
+adjSatietyTemplate :: AdjTemplate
+adjSatietyTemplate = AdjTemplate 1 "satiety" adjSatietyTemplateId
+
+adjSatiety :: Adj
+adjSatiety = instantiate adjHungerTemplate
+
+fatGuyHungersToEatBurgers :: Rel
+fatGuyHungersToEatBurgers = Rel 0 100 verbHungers Wants (Just money) Nothing
+
+hamburgerTemplate :: NounTemplate
+fatGuyTemplate = NounTemplate 0 "hamburger" [] [adjMeaty] 
+
+hamburger :: Noun
+hamburger = instantiate hamburgerTemplate
+
+fatGuyTemplate :: NounTemplate
+fatGuyTemplate = NounTemplate 1 "fat guy" [fatGuyHungersToEatBurgers] [adjSatiety]
+
+fatGuy :: Noun
+fatGuy = instantiate fatGuyTemplate
 
 {- 
 * Search for Matching Relationship
@@ -63,11 +104,21 @@ dahlfooWantsMoney = Rel 0 100 dahlfoo Wants (Just money) Nothing
 * else:
     * Add New Relationship
  -}
-addRel :: Rel -> Noun -> Noun
-addRel rel noun = find (matchingRels rel) noun^.nounRels
+--addRel :: Rel -> Noun -> Noun
+--addRel rel noun = find (matchingRels rel) noun^.nounRels
 
-matchingRels :: Rel -> Rel -> Bool
-matchingRels rel1 rel2 = rel1^.verb
+--matchingRels :: Rel -> Rel -> Bool
+--matchingRels rel1 rel2 = rel1^.verb
+
+
+instance Template NounTemplate where
+    instantiate (NounTemplate ntId ntName ntRels ntAdjs) = Noun 0 ntName ntRels ntAdjs ntId
+
+instance Template AdjTemplate where
+    instantiate (AdjTemplate atId atName atValue) = Adj 0 atVal []
+
+class Instantiable a where
+    instantiate :: a -> b
 
 
 main :: IO ()
