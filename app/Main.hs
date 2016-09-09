@@ -4,6 +4,7 @@ module Main where
 
 import Control.Lens hiding (element)
 import Data.List (find)
+import Text.Show.Functions
 
 type NounTemplateID = Integer
 type NounID = Integer
@@ -48,9 +49,9 @@ data AdjTemplate = AdjTemplate {
 
 data Adj = Adj {
     _adjID    :: AdjID,
-    _adjValue :: Integer,
-    _adjAdjs  :: [Adj]
-    _adjSuper :: AdjTemplateID,
+    _adjVal :: Integer,
+    _adjAdjs  :: [Adj],
+    _adjSuper :: AdjTemplateID
 } deriving (Show)
 
 makeLenses ''NounTemplate
@@ -63,39 +64,39 @@ makeLenses ''AdjTemplate
 verbHungers :: Verb
 verbHungers n1 n2 = [Eats n1 n2]
 
-condHungry :: Conditional
-condHungry lowestSatiety n _ = case satiety of find (n^.nounAdjs) (\adj -> adj^.adjSuper == adjSatietyTemplateId) hungry of
-    Just satiety -> satiety < lowestSatiety
+condHungry :: Integer -> Conditional
+condHungry lowestSatiety n _ = case find (\adj -> adj^.adjSuper == adjSatietyTemplateId) (n^.nounAdjs) of
+    Just satiety -> satiety^.adjVal < lowestSatiety
     Nothing -> False
 
 adjTastyTemplateId = 0
 adjTastyTemplate :: AdjTemplate
 adjTastyTemplate = AdjTemplate 0 "tasty" adjTastyTemplateId
 
-adjTasty :: AdjTemplate
-adjTasty = instantiate adjTastyTemplate
+adjTasty :: Adj
+adjTasty = instantiateAdj adjTastyTemplate
 
 adjSatietyTemplateId = 1
 adjSatietyTemplate :: AdjTemplate
 adjSatietyTemplate = AdjTemplate 1 "satiety" adjSatietyTemplateId
 
 adjSatiety :: Adj
-adjSatiety = instantiate adjHungerTemplate
+adjSatiety = instantiateAdj adjSatietyTemplate
 
 fatGuyHungersToEatBurgers :: Rel
-fatGuyHungersToEatBurgers = Rel 0 100 verbHungers Wants (Just money) Nothing
+fatGuyHungersToEatBurgers = Rel 0 100 verbHungers [(condHungry 100)]
 
 hamburgerTemplate :: NounTemplate
-fatGuyTemplate = NounTemplate 0 "hamburger" [] [adjMeaty] 
+hamburgerTemplate = NounTemplate 0 "hamburger" [] [adjTasty] 
 
 hamburger :: Noun
-hamburger = instantiate hamburgerTemplate
+hamburger = instantiateNoun hamburgerTemplate
 
 fatGuyTemplate :: NounTemplate
 fatGuyTemplate = NounTemplate 1 "fat guy" [fatGuyHungersToEatBurgers] [adjSatiety]
 
 fatGuy :: Noun
-fatGuy = instantiate fatGuyTemplate
+fatGuy = instantiateNoun fatGuyTemplate
 
 {- 
 * Search for Matching Relationship
@@ -110,15 +111,11 @@ fatGuy = instantiate fatGuyTemplate
 --matchingRels :: Rel -> Rel -> Bool
 --matchingRels rel1 rel2 = rel1^.verb
 
+instantiateNoun :: NounTemplate -> Noun
+instantiateNoun (NounTemplate ntId ntName ntRels ntAdjs) = Noun 0 ntRels ntAdjs ntId
 
-instance Template NounTemplate where
-    instantiate (NounTemplate ntId ntName ntRels ntAdjs) = Noun 0 ntName ntRels ntAdjs ntId
-
-instance Template AdjTemplate where
-    instantiate (AdjTemplate atId atName atValue) = Adj 0 atVal []
-
-class Instantiable a where
-    instantiate :: a -> b
+instantiateAdj :: AdjTemplate -> Adj
+instantiateAdj (AdjTemplate atId atName atVal) = Adj 0 atVal [] atId
 
 
 main :: IO ()

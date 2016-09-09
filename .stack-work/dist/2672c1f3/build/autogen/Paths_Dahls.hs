@@ -17,7 +17,7 @@ version = Version [0,1,0,0] []
 bindir, libdir, datadir, libexecdir, sysconfdir :: FilePath
 
 bindir     = "C:\\Users\\Joshua\\Desktop\\Dahls\\.stack-work\\install\\29d018e7\\bin"
-libdir     = "C:\\Users\\Joshua\\Desktop\\Dahls\\.stack-work\\install\\29d018e7\\lib\\x86_64-windows-ghc-7.10.3\\Dahls-0.1.0.0-EXZ3RLO0FIaJExhjQASr5l"
+libdir     = "C:\\Users\\Joshua\\Desktop\\Dahls\\.stack-work\\install\\29d018e7\\lib\\x86_64-windows-ghc-7.10.3\\Dahls-0.1.0.0-89vJTNVxTKYIf9v7sbMsHw"
 datadir    = "C:\\Users\\Joshua\\Desktop\\Dahls\\.stack-work\\install\\29d018e7\\share\\x86_64-windows-ghc-7.10.3\\Dahls-0.1.0.0"
 libexecdir = "C:\\Users\\Joshua\\Desktop\\Dahls\\.stack-work\\install\\29d018e7\\libexec"
 sysconfdir = "C:\\Users\\Joshua\\Desktop\\Dahls\\.stack-work\\install\\29d018e7\\etc"

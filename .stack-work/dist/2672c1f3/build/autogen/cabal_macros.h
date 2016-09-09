@@ -7,6 +7,13 @@
   (major1) == 4 && (major2) <  8 || \
   (major1) == 4 && (major2) == 8 && (minor) <= 2)
 
+/* package lens-4.13 */
+#define VERSION_lens "4.13"
+#define MIN_VERSION_lens(major1,major2,minor) (\
+  (major1) <  4 || \
+  (major1) == 4 && (major2) <  13 || \
+  (major1) == 4 && (major2) == 13 && (minor) <= 0)
+
 /* tool gcc-5.2.0 */
 #define TOOL_VERSION_gcc "5.2.0"
 #define MIN_TOOL_VERSION_gcc(major1,major2,minor) (\
@@ -56,5 +63,5 @@
   (major1) == 2 && (major2) <  25 || \
   (major1) == 2 && (major2) == 25 && (minor) <= 0)
 
-#define CURRENT_PACKAGE_KEY "Dahls_EXZ3RLO0FIaJExhjQASr5l"
+#define CURRENT_PACKAGE_KEY "Dahls_89vJTNVxTKYIf9v7sbMsHw"
 
