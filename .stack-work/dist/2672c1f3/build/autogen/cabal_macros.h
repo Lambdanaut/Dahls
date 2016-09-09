@@ -14,6 +14,13 @@
   (major1) == 4 && (major2) <  13 || \
   (major1) == 4 && (major2) == 13 && (minor) <= 0)
 
+/* package HUnit-1.3.1.2 */
+#define VERSION_HUnit "1.3.1.2"
+#define MIN_VERSION_HUnit(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  3 || \
+  (major1) == 1 && (major2) == 3 && (minor) <= 1)
+
 /* tool gcc-5.2.0 */
 #define TOOL_VERSION_gcc "5.2.0"
 #define MIN_TOOL_VERSION_gcc(major1,major2,minor) (\
@@ -63,5 +70,5 @@
   (major1) == 2 && (major2) <  25 || \
   (major1) == 2 && (major2) == 25 && (minor) <= 0)
 
-#define CURRENT_PACKAGE_KEY "Dahls_89vJTNVxTKYIf9v7sbMsHw"
+#define CURRENT_PACKAGE_KEY "Dahls_J5jS2Hw2NbS5Ghx6XLuP1v"
 
