@@ -15,16 +15,14 @@ module MockGrammar (
 ) where
 
 import Control.Lens hiding (element)
-import Data.List (find)
-
-import Test.HUnit
 
 import Grammar
 import Mechanics
+import Process
 
 -- Dummy Data
 verbHungers :: Verb
-verbHungers n1 n2 = [Eats n1 n2]
+verbHungers n1 n2 = [ActionEats n1 n2]
 
 condHungry :: Integer -> Cond
 condHungry lowestSatiety n _ = case findAdj adjSatietyTemplateId (n^.nounAdjs) of

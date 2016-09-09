@@ -1,11 +1,9 @@
 module TestMechanics where
 
-import Control.Exception (evaluate)
 import Test.Hspec
-import Test.QuickCheck
 
 import Grammar
-import Mechanics
+import Mechanics(findAdj, respond)
 
 import MockGrammar
 
@@ -15,8 +13,9 @@ test = hspec $ do
     it "should return `Just Adjective` when the templateID is found" $ do
       findAdj adjSatietyTemplateId [adjTasty, adjSatiety] `shouldBe` (Just adjSatiety :: Maybe Adj)
 
-    it "returns the first element of an *arbitrary* list" $
-      property $ \x xs -> head (x:xs) == (x :: Int)
+    it "should return `Nothing` when the templateID isn't found" $
+      findAdj 987654321 [adjTasty, adjSatiety] `shouldBe` (Nothing :: Maybe Adj)
 
-    it "throws an exception if used with an empty list" $ do
-      evaluate (head []) `shouldThrow` anyException
+  describe "Mechanics.interact" $ do
+    it "Should return lists of lists of actions after a passing condition" $
+      (fatGuy `respond` hamburger) `shouldBe` ([[ActionEats fatGuy hamburger]] :: [[Action]])
