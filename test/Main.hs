@@ -1,6 +1,6 @@
 module Main where
 
-import TestGrammar
+import qualified TestMechanics
 
 main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+main = TestMechanics.test

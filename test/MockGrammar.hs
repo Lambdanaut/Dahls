@@ -1,6 +1,18 @@
-{-# LANGUAGE TemplateHaskell #-}
-
-module TestGrammar where
+module MockGrammar (
+    verbHungers,
+    condHungry,
+    adjSatietyTemplateId,
+    adjTastyTemplate,
+    adjTasty,
+    adjSatietyTemplateId,
+    adjSatietyTemplate,
+    adjSatiety,
+    fatGuyHungersToEatBurgers,
+    hamburgerTemplate,
+    hamburger,
+    fatGuyTemplate,
+    fatGuy,
+) where
 
 import Control.Lens hiding (element)
 import Data.List (find)
@@ -8,15 +20,14 @@ import Data.List (find)
 import Test.HUnit
 
 import Grammar
+import Mechanics
 
---test1 = TestCase (assertEqual "for (foo 3)," (1,2) (foo 3))
-
--- Test functions
+-- Dummy Data
 verbHungers :: Verb
 verbHungers n1 n2 = [Eats n1 n2]
 
-condHungry :: Integer -> Conditional
-condHungry lowestSatiety n _ = case find (\adj -> adj^.adjSuper == adjSatietyTemplateId) (n^.nounAdjs) of
+condHungry :: Integer -> Cond
+condHungry lowestSatiety n _ = case findAdj adjSatietyTemplateId (n^.nounAdjs) of
     Just satiety -> satiety^.adjVal < lowestSatiety
     Nothing -> False
 
@@ -35,7 +46,7 @@ adjSatiety :: Adj
 adjSatiety = instantiateAdj adjSatietyTemplate
 
 fatGuyHungersToEatBurgers :: Rel
-fatGuyHungersToEatBurgers = Rel 0 100 verbHungers [(condHungry 100)]
+fatGuyHungersToEatBurgers = Rel 0 100 verbHungers [(condHungry 100), (condTheyAre adjTastyTemplateId)]
 
 hamburgerTemplate :: NounTemplate
 hamburgerTemplate = NounTemplate 0 "hamburger" [] [adjTasty] 
