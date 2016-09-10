@@ -15,12 +15,12 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      app
-  exposed-modules:     Main, Grammar, Mechanics, Process
+  exposed-modules:     Main, Grammar, GrammarHelpers, Mechanics, Process
   build-depends:       base >= 4.7 && < 5
                      , lens == 4.13
                      , mtl == 2.2.1
-                     , uuid == 1.3.12
                      , random == 1.1
+                     , uuid == 1.3.12
   default-language:    Haskell2010
 
 --executable Dahls-exe
@@ -37,10 +37,11 @@ test-suite Dahls-test
   main-is:             Main.hs
   build-depends:       base
                      , Dahls
-                     , lens == 4.13
-                     , HUnit == 1.3.1.2
                      , hspec == 2.2.3
+                     , HUnit == 1.3.1.2
+                     , lens == 4.13
                      , mtl == 2.2.1
+                     , uuid == 1.3.12
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
 

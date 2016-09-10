@@ -5,35 +5,35 @@ module Grammar(
   Cond, Verb,
 
   NounTemplate(..),
-  nounTemplateId,
   nounTemplateName,
   nounTemplateRels,
   nounTemplateAdjs,
+  nounTemplateId,
 
   Noun(..),
-  nounId,
   nounRels,
   nounAdjs,
   nounSuper,
+  nounId,
 
   Rel(..),
-  relId,
   relPower,
   relVerb,
   relConds,
+  relId,
 
   Action(..),
 
   AdjTemplate(..),
-  adjTemplateId,
   adjTemplateName,
   adjTemplateValue,
+  adjTemplateId,
 
   Adj(..), 
-  adjId,
   adjVal,
   adjAdjs,
   adjSuper,
+  adjId,
 ) where
 
 import Control.Lens hiding (element)
@@ -56,17 +56,17 @@ type Cond = Noun -> Noun -> Bool
 type Verb = Noun -> Noun -> [Action]
 
 data NounTemplate = NounTemplate {
-  _nounTemplateId         :: NounTemplateId,
-  _nounTemplateName       :: String,
-  _nounTemplateRels       :: [Rel],
-  _nounTemplateAdjs       :: [Adj]
+  _nounTemplateName       :: String
+, _nounTemplateRels       :: [Rel]
+, _nounTemplateAdjs       :: [Adj]
+, _nounTemplateId         :: NounTemplateId
 } deriving (Show)
 
 data Noun = Noun {
-  _nounId    :: NounId,
-  _nounRels  :: [Rel],
-  _nounAdjs  :: [Adj],
-  _nounSuper :: NounTemplateId
+  _nounRels  :: [Rel]
+, _nounAdjs  :: [Adj]
+, _nounSuper :: NounTemplateId
+, _nounId    :: NounId
 } deriving (Show)
 
 instance Eq Noun where
@@ -75,26 +75,26 @@ instance EqId Noun where
   x === y = _nounId x == _nounId y
 
 data Rel = Rel {
-  _relId    :: RelId,
-  _relPower :: Double, -- Strength of relationship
-  _relVerb  :: Verb,
-  _relConds :: [Cond]
+  _relPower :: Double -- Strength of relationship
+, _relVerb  :: Verb
+, _relConds :: [Cond]
+, _relId    :: RelId
 } deriving (Show)
 
 instance EqId Rel where
   x === y = _relId x == _relId y
 
 data AdjTemplate = AdjTemplate {
-  _adjTemplateId    :: AdjTemplateId,
-  _adjTemplateName  :: String,
-  _adjTemplateValue :: Integer
+  _adjTemplateName  :: String
+, _adjTemplateValue :: Integer
+, _adjTemplateId    :: AdjTemplateId
 } deriving (Show)
 
 data Adj = Adj {
-  _adjId    :: AdjId,
-  _adjVal :: Integer,
-  _adjAdjs  :: [Adj],
-  _adjSuper :: AdjTemplateId
+  _adjVal   :: Integer
+, _adjAdjs  :: [Adj]
+, _adjSuper :: AdjTemplateId
+, _adjId    :: AdjId
 } deriving (Show)
 
 instance Eq Adj where

@@ -1,59 +1,30 @@
-module MockGrammar (
-    verbHungers,
-    condHungry,
-    adjSatietyTemplateId,
-    adjTastyTemplate,
-    adjTasty,
-    adjSatietyTemplateId,
-    adjSatietyTemplate,
-    adjSatiety,
-    fatGuyHungersToEatBurgers,
-    hamburgerTemplate,
-    hamburger,
-    fatGuyTemplate,
-    fatGuy,
-) where
+module MockGrammar where
 
 import Control.Lens hiding (element)
+import Data.UUID(UUID)
 
 import Grammar
+import GrammarHelpers(instantiateNoun, instantiateAdj, initObject, findAdj, condTheyAre)
 import Mechanics
-import Process
+import Process(SimState)
 
 -- Dummy Data
 verbHungers :: Verb
 verbHungers n1 n2 = [ActionEats n1 n2]
 
-condHungry :: Integer -> Cond
-condHungry lowestSatiety n _ = case findAdj adjSatietyTemplateId (n^.nounAdjs) of
-    Just satiety -> satiety^.adjVal < lowestSatiety
-    Nothing -> False
+test :: SimState ()
+test = do
+  adjTastyTemplate          <- initObject $ AdjTemplate "tasty" 100 
+  adjTasty                  <- instantiateAdj adjTastyTemplate
+  adjSatietyTemplate        <- initObject $ AdjTemplate "satiety" 0
+  adjSatiety                <- instantiateAdj adjSatietyTemplate
+  let condHungry lowestSatiety n _ = case findAdj adjSatietyTemplate (n^.nounAdjs) of
+                                        Just satiety -> satiety^.adjVal < lowestSatiety
+                                        Nothing -> False
+  fatGuyHungersToEatBurgers <- initObject $ Rel 100 verbHungers [(condHungry 100), (condTheyAre adjTastyTemplate)]
+  hamburgerTemplate         <- initObject $ NounTemplate "hamburger" [] [adjTasty] 
+  hamburger                 <- instantiateNoun hamburgerTemplate
+  fatGuyTemplate            <- initObject $ NounTemplate "fat guy" [fatGuyHungersToEatBurgers] [adjSatiety]
+  fatGuy                    <- instantiateNoun fatGuyTemplate
 
-adjTastyTemplateId = 0
-adjTastyTemplate :: AdjTemplate
-adjTastyTemplate = AdjTemplate 0 "tasty" adjTastyTemplateId
-
-adjTasty :: Adj
-adjTasty = instantiateAdj adjTastyTemplate
-
-adjSatietyTemplateId = 1
-adjSatietyTemplate :: AdjTemplate
-adjSatietyTemplate = AdjTemplate 1 "satiety" adjSatietyTemplateId
-
-adjSatiety :: Adj
-adjSatiety = instantiateAdj adjSatietyTemplate
-
-fatGuyHungersToEatBurgers :: Rel
-fatGuyHungersToEatBurgers = Rel 0 100 verbHungers [(condHungry 100), (condTheyAre adjTastyTemplateId)]
-
-hamburgerTemplate :: NounTemplate
-hamburgerTemplate = NounTemplate 0 "hamburger" [] [adjTasty] 
-
-hamburger :: Noun
-hamburger = instantiateNoun hamburgerTemplate
-
-fatGuyTemplate :: NounTemplate
-fatGuyTemplate = NounTemplate 1 "fat guy" [fatGuyHungersToEatBurgers] [adjSatiety]
-
-fatGuy :: Noun
-fatGuy = instantiateNoun fatGuyTemplate
+  return ()
